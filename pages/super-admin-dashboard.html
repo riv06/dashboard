@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Super Administrador</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="../assets/logo.svg" alt="TEPIA Logo">
+                </div>
+                <h2 class="sidebar-title">Super Admin</h2>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-item active" data-section="overview">
+                    <span class="nav-icon">📊</span>
+                    <span>Resumen</span>
+                </div>
+                <div class="nav-item" data-section="super-admins">
+                    <span class="nav-icon">👨‍💼</span>
+                    <span>Super Admins</span>
+                </div>
+                <div class="nav-item" data-section="companies">
+                    <span class="nav-icon">🏢</span>
+                    <span>Empresas</span>
+                </div>
+                <div class="nav-item" data-section="users">
+                    <span class="nav-icon">👥</span>
+                    <span>Usuarios</span>
+                </div>
+                <div class="nav-item" data-section="sales">
+                    <span class="nav-icon">💰</span>
+                    <span>Ventas</span>
+                </div>
+                <div class="nav-item" data-section="commissions">
+                    <span class="nav-icon">📈</span>
+                    <span>Comisiones</span>
+                </div>
+                <div class="nav-item" onclick="auth.logout()">
+                    <span class="nav-icon">🚪</span>
+                    <span>Cerrar Sesión</span>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Panel de Administración</h1>
+                <div class="user-info">
+                    <span class="user-name" id="user-name">Super Admin</span>
+                    <button class="btn btn-danger btn-sm" onclick="auth.logout()">Salir</button>
+                </div>
+            </div>
+
+            <!-- OVERVIEW SECTION -->
+            <section id="section-overview" class="dashboard-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🏢</div>
+                        <div class="stat-value" id="stat-companies">0</div>
+                        <div class="stat-label">Empresas Registradas</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="stat-users">0</div>
+                        <div class="stat-label">Usuarios Totales</div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-icon">🎫</div>
+                        <div class="stat-value" id="stat-tickets">0</div>
+                        <div class="stat-label">Boletos Vendidos</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon">💵</div>
+                        <div class="stat-value" id="stat-commissions">$0</div>
+                        <div class="stat-label">Comisiones Totales</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SUPER ADMINS SECTION -->
+            <section id="section-super-admins" class="dashboard-section hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Gestión de Super Administradores</h2>
+                        <button class="btn btn-danger" onclick="openSuperAdminModal()">+ Nuevo Super Admin</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead class="red">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Usuario</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Fecha Registro</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="super-admins-table-body">
+                                    <tr>
+                                        <td colspan="6" class="text-center">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COMPANIES SECTION -->
+            <section id="section-companies" class="dashboard-section hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Gestión de Empresas</h2>
+                        <button class="btn btn-primary" onclick="openCompanyModal()">+ Nueva Empresa</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Comisión %</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="companies-table-body">
+                                    <tr>
+                                        <td colspan="7" class="text-center">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- USERS SECTION -->
+            <section id="section-users" class="dashboard-section hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Usuarios Registrados</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead class="red">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Usuario</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Empresa</th>
+                                        <th>Rol</th>
+                                        <th>Fecha Registro</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                    <tr>
+                                        <td colspan="7" class="text-center">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SALES SECTION -->
+            <section id="section-sales" class="dashboard-section hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Registro de Ventas</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Empresa</th>
+                                        <th>Pasajero</th>
+                                        <th>Ruta</th>
+                                        <th>Asiento</th>
+                                        <th>Precio</th>
+                                        <th>Comisión</th>
+                                        <th>Fecha Viaje</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sales-table-body">
+                                    <tr>
+                                        <td colspan="9" class="text-center">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COMMISSIONS SECTION -->
+            <section id="section-commissions" class="dashboard-section hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Reporte de Comisiones</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead class="red">
+                                    <tr>
+                                        <th>Empresa</th>
+                                        <th>Comisión %</th>
+                                        <th>Total Boletos</th>
+                                        <th>Ventas Totales</th>
+                                        <th>Comisiones Totales</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="commissions-table-body">
+                                    <tr>
+                                        <td colspan="5" class="text-center">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Super Admin Modal -->
+    <div id="super-admin-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="super-admin-modal-title">Nuevo Super Admin</h2>
+                <span class="modal-close" onclick="closeSuperAdminModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="super-admin-form">
+                    <input type="hidden" id="super-admin-id">
+                    <div class="form-group">
+                        <label class="form-label">Usuario *</label>
+                        <input type="text" id="super-admin-username" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contraseña *</label>
+                        <input type="password" id="super-admin-password" class="form-input">
+                        <small>Dejar en blanco para mantener la contraseña actual al editar</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nombre Completo</label>
+                        <input type="text" id="super-admin-name" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="super-admin-email" class="form-input">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeSuperAdminModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="saveSuperAdmin()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Modal -->
+    <div id="company-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nueva Empresa</h2>
+                <span class="modal-close" onclick="closeCompanyModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="company-form">
+                    <input type="hidden" id="company-id">
+                    <div class="form-group">
+                        <label class="form-label" for="company-name">Nombre *</label>
+                        <input type="text" id="company-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="company-email">Email</label>
+                        <input type="email" id="company-email" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="company-phone">Teléfono</label>
+                        <input type="text" id="company-phone" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="company-address">Dirección</label>
+                        <textarea id="company-address" class="form-input" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="company-commission">Porcentaje de Comisión (%)</label>
+                        <input type="number" id="company-commission" class="form-input" min="0" max="100" step="0.01"
+                            value="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="company-status">Estado</label>
+                        <select id="company-status" class="form-input">
+                            <option value="active">Activo</option>
+                            <option value="inactive">Inactivo</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCompanyModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="saveCompany()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/super-admin.js"></script>
+</body>
+
+</html>

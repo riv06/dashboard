@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Super Administrador</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>Super Administrador</h1>
+                <p>Acceso al panel de administración</p>
+            </div>
+
+            <div class="login-body">
+                <div id="alert-container"></div>
+
+                <form id="login-form">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Usuario</label>
+                        <input type="text" id="username" class="form-input" placeholder="Ingrese su usuario" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Contraseña</label>
+                        <input type="password" id="password" class="form-input" placeholder="Ingrese su contraseña"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger btn-block btn-lg" id="login-btn">
+                        Iniciar Sesión
+                    </button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a href="../index.html" class="btn btn-outline">← Volver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const loginBtn = document.getElementById('login-btn');
+            const alertContainer = document.getElementById('alert-container');
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Iniciando sesión...';
+            alertContainer.innerHTML = '';
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/auth/login/super-admin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    alertContainer.innerHTML = '<div class="alert alert-success">✓ Login exitoso. Redirigiendo...</div>';
+
+                    setTimeout(() => {
+                        window.location.href = '/super-admin-dashboard';
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Error en el login');
+                }
+            } catch (error) {
+                alertContainer.innerHTML = `<div class="alert alert-danger">⚠ ${error.message}</div>`;
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Iniciar Sesión';
+            }
+        });
+    </script>
+</body>
+
+</html>
